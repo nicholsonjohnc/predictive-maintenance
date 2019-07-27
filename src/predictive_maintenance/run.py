@@ -115,6 +115,15 @@ def create_catalog(config: ConfigLoader, **kwargs) -> DataCatalog:
     return catalog
 
 
+def init_spark_session():
+    return (
+        spark = SparkSession.builder \
+        .appName("predictive-maintenance") \
+        .master("local[*]") \
+        .getOrCreate()
+    )
+
+
 def main(
     tags: Iterable[str] = None,
     env: str = None,
@@ -137,6 +146,9 @@ def main(
     """
     # Report project name
     logging.info("** Kedro project {}".format(Path.cwd().name))
+    
+    # Initialise SparkSession
+    spark = init_spark_session()
 
     # Load Catalog
     conf = get_config(project_path=str(Path.cwd()), env=env)
